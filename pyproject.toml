@@ -1,0 +1,10 @@
+[tool.poetry]
+name = "site-software-infrastructure-setup"
+version = "0.1.0"
+description = "Initializes on-site software infrastructure"
+authors = ["Lisa Danz <lmdanz@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.13.0"
+ansible = "^11.0.0"
