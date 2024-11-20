@@ -1,3 +1,10 @@
 ---
 - name: Install Kubernetes via Kubespray
   ansible.builtin.import_playbook: kubernetes_sigs.kubespray.cluster
+
+- name: Install MySQL
+  become: yes
+  hosts: all
+  gather_facts: false # likely need to remove this later?
+  roles:
+    - { role: "mysql-cluster", tags: ["mysql-cluster"] }

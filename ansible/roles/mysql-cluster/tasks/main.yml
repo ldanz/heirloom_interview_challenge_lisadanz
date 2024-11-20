@@ -1,18 +1,42 @@
 ---
-- name: "Install helm locally"
-  local_action:
-    module: ansible.builtin.package
-    name: helm
-    state: present
-  run_once: true
-  become: false
+- name: Install helm and run charts
+  block:
+    - name: "Install apt-transport-https"
+      ansible.builtin.package:
+        name: apt-transport-https
+        state: present
 
-- name: "Add mysql-operator helm repo locally"
-  local_action: ansible.builtin.command helm repo add mysql-operator https://mysql.github.io/mysql-operator/
-  run_once: true
-  become: false
+    - name: "Add key for helm repo"
+      ansible.builtin.apt_key:
+        url: https://baltocdn.com/helm/signing.asc
+        keyring: /usr/share/keyrings/helm.gpg
 
-- name: "Update cache of mysql-operator helm repo locally"
-  local_action: ansible.builtin.command helm repo update
+    - name: "Get architecture"
+      ansible.builtin.command: dpkg --print-architecture
+      register: system_arch
+      changed_when: false
+      check_mode: false
+
+    - name: "Add helm repo"
+      ansible.builtin.apt_repository:
+        repo: "deb [arch={{ system_arch.stdout }} signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main"
+        filename: helm-stable-debian
+
+    - name: "Install helm"
+      ansible.builtin.package:
+        name: helm
+        state: present
+
+    - name: "Add mysql-operator helm repo"
+      ansible.builtin.command: helm repo add mysql-operator https://mysql.github.io/mysql-operator/
+
+    - name: "Update cache of mysql-operator helm repo"
+      ansible.builtin.command: helm repo update
+
+    - name: "Deploy mysql operator via helm chart"
+      kubernetes.core.helm:
+        name: mysql-operator
+        chart_ref: mysql-operator/mysql-operator
+        namespace: mysql-operator
+        create_namespace: true
   run_once: true
-  become: false

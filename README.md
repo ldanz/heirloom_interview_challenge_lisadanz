@@ -29,5 +29,6 @@ This repository installs Kubernetes and installs a MySQL database.  It is intend
 
 We assume the following:
 - The physical computers are already powered on and networked.  They are all on one local network.  They allow ingress on TCP port 22 from the local network, and egress to the public internet.
+- The target nodes are running Ubuntu.
 - The Ansible control node computer is on the same local network as the target nodes (for example, an operator laptop at the site, a bastion host located on-site, etc).
 - This setup assumes that the input is a list of server addresses for the kubernetes nodes.  All nodes are assumed to be interchangeable.
