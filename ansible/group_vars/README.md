@@ -1,0 +1,1 @@
+The files in this directory are copied from [https://github.com/kubernetes-sigs/kubespray/tree/v2.25.1/inventory/sample/group_vars](https://github.com/kubernetes-sigs/kubespray/tree/v2.25.1/inventory/sample/group_vars), as per the kubespray instructions.
