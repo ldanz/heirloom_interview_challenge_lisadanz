@@ -1,0 +1,18 @@
+---
+- name: "Install helm locally"
+  local_action:
+    module: ansible.builtin.package
+    name: helm
+    state: present
+  run_once: true
+  become: false
+
+- name: "Add mysql-operator helm repo locally"
+  local_action: ansible.builtin.command helm repo add mysql-operator https://mysql.github.io/mysql-operator/
+  run_once: true
+  become: false
+
+- name: "Update cache of mysql-operator helm repo locally"
+  local_action: ansible.builtin.command helm repo update
+  run_once: true
+  become: false
