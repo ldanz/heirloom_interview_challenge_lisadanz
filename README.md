@@ -72,4 +72,4 @@ We assume the following:
 
 Here is a high-level diagram of the layout of the system:
 
-![diagram showing a kubernetes cluster in the lower layer and a MySQL cluster in the upper layer](https://github.com/[username]/[reponame]/blob/[branch]/mysql_on_k8s_diagram.png?raw=true)
+![diagram showing a kubernetes cluster in the lower layer and a MySQL cluster in the upper layer](https://raw.githubusercontent.com/ldanz/heirloom_interview_challenge_lisadanz/refs/heads/main/mysql_on_k8s_diagram.png)
