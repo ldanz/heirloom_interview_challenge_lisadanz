@@ -1,0 +1,1 @@
+This directory contains Kubernetes manifests that are to be triggered manually.  There are other Kubernetes configurations managed via Ansible, and those are embedded directly in the Ansible directory.

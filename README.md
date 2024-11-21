@@ -37,10 +37,18 @@ This repository installs Kubernetes and installs a MySQL database.  It is intend
 
         poetry run ansible-playbook -i INVENTORY_FILE site.yml -b
 
-### Assumptions
+### Taking a one-off backup
+
+    # Pick one of the control nodes to set as the value of target_host
+    export target_host=PASTE_KUBERNETES_CONTROL_NODE
+
+    scp kubernetes/mysql-one-off-backup.yml "${target_host}:/tmp" && ssh "${target_host}" 'cat /tmp/mysql-one-off-backup.yml | sudo kubectl apply -f -'
+
+## Assumptions
 
 We assume the following:
 - The physical computers are already powered on and networked.  They are all on one local network.  They allow ingress on TCP port 22 from the local network, and egress to the public internet.
 - The target nodes are running Ubuntu.
+- The Ansible control node has ssh access and passwordless sudo access to the target nodes.
 - The Ansible control node computer is on the same local network as the target nodes (for example, an operator laptop at the site, a bastion host located on-site, etc).
 - This setup assumes that the input is a list of server addresses for the kubernetes nodes.  All nodes are assumed to be interchangeable.

@@ -1,0 +1,8 @@
+apiVersion: mysql.oracle.com/v2
+kind: MySQLBackup
+metadata:
+    name: one-off-backup
+    namespace: mysql-operator
+spec:
+  clusterName: cluster.local
+  backupProfileName: snapshot-profile-s3
