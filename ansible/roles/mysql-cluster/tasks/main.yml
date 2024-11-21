@@ -121,8 +121,10 @@
                   s3:
                     prefix: mysql-backups
                     config: mysql-backups-s3-config
-                    bucketName: heirloom-technical-exercise-bucket-38cc6
+                    bucketName: "{{ aws_s3_backup_bucket }}"
                     profile: "{{ aws_profile }}"
+              podAnnotations:
+                backupTarget: s3
           backupSchedules:
             - name: daily-snapshot
               schedule: "0 3 * * *"
@@ -131,7 +133,9 @@
               backupProfileName: snapshot-profile-s3
               enabled: true
 
-# TODO: sleep/etc to wait for db availability
+- name: "Pause for 2 minutes to wait for pods to start up"
+  ansible.builtin.pause:
+    minutes: 2
 
 - name: "Create dev_db database"
   ansible.builtin.command: "kubectl -n mysql-operator exec -ti -c mysql pod/mysql-cluster-0 -- /bin/mysql -u root --password=testpass -e 'create database if not exists dev_db;'"
