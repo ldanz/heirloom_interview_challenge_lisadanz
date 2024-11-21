@@ -68,7 +68,11 @@ We assume the following:
 - The Ansible control node computer is on the same local network as the target nodes (for example, an operator laptop at the site, a bastion host located on-site, etc).
 - This setup assumes that the input is a list of server addresses for the kubernetes nodes.  All nodes are assumed to be interchangeable.
 
-## Architecture diagram
+## Architecture
+
+The Kubernetes foundation is built using kubespray, which provides sensible defaults and greatly reduces the amount of code we need to write by hand.
+
+The MySQL database is built as a MySQL cluster managed by the MySQL Kubernetes Operator.  The advantage of using the MySQL cluster is that it automatically shards the data across instances and replicates each shard across multiple nodes.  This way, losing a single node does not lose any data, and the storage and query load is distributed across the instances.
 
 Here is a high-level diagram of the layout of the system:
 
