@@ -2,10 +2,6 @@
 
 This repository installs Kubernetes and installs a MySQL database.  It is intended to set up these resources at a new site.
 
-## Terminology
-
-- "Ansible control node" is the computer (such as a laptop or a Jenkins worker) that is running Ansible.
-
 ## How to run
 
 ### One-time setup
@@ -68,6 +64,12 @@ This repository installs Kubernetes and installs a MySQL database.  It is intend
 We assume the following:
 - The physical computers are already powered on and networked.  They are all on one local network.  They allow ingress on TCP port 22 from the local network, and egress to the public internet.
 - The target nodes are running Ubuntu.
-- The Ansible control node has ssh access and passwordless sudo access to the target nodes.
+- The Ansible control node (that is, the computer running Ansible) has ssh access and passwordless sudo access to the target nodes.
 - The Ansible control node computer is on the same local network as the target nodes (for example, an operator laptop at the site, a bastion host located on-site, etc).
 - This setup assumes that the input is a list of server addresses for the kubernetes nodes.  All nodes are assumed to be interchangeable.
+
+## Architecture diagram
+
+Here is a high-level diagram of the layout of the system:
+
+![diagram showing a kubernetes cluster in the lower layer and a MySQL cluster in the upper layer](https://github.com/[username]/[reponame]/blob/[branch]/mysql_on_k8s_diagram.png?raw=true)
