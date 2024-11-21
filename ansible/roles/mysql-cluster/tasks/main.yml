@@ -96,4 +96,9 @@
             useSelfSigned: true
           credentials:
             root:
-              password: testpass #todo update
+              password: testpass #todo update here and below
+# TODO: sleep/etc to wait for db availability
+
+- name: "Create dev_db database"
+  ansible.builtin.command: "kubectl -n mysql-operator exec -ti -c mysql pod/mysql-cluster-0 -- /bin/mysql -u root --password=testpass -e 'create database dev_db;'"
+  run_once: true
