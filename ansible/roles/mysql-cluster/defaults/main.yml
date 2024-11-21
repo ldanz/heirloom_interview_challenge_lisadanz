@@ -1,1 +1,2 @@
 mysql_server_version: 8.4.3
+aws_profile: default

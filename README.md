@@ -10,12 +10,24 @@ This repository installs Kubernetes and installs a MySQL database.  It is intend
 
 ### One-time setup
 
-1. Install python
-1. Install poetry
+1. Install python at the version specified in .python-version.  You can use whatever python installation method you prefer.  One way to do it is with pyenv:
+    1. Install pyenv by following the instructions in https://github.com/pyenv/pyenv#installation for your operating system.
+    2. Install python:
+
+            cd ansible
+            pyenv install `cat .python-version`
+1. Install poetry by following the instructions in https://python-poetry.org/docs/#installing-with-the-official-installer for your operating system.
 1. Install dependencies
 
-    poetry install
-    poetry run ansible-galaxy install -r requirements.yml
+        poetry install
+        poetry run ansible-galaxy install -r requirements.yml
+1. Configure your AWS credentials in ~/.aws/credentials.  You can do this using `aws configure` on the command line, or manually editing the file like so:
+
+        [default]
+        aws_access_key_id = PASTE_KEY_HERE
+        aws_secret_access_key = PASTE_SECRET_HERE
+    - Note: If you want to use a profile other than `default`, then you will also need to pass `-e aws_profile=YOUR_AWS_PROFILE` to the `ansible-playbook` command below.
+    - Note that these credentials will be copied into a kubernetes secret for use in backups.  You are advised to use credentials that provide limited access.
 
 
 ### Running

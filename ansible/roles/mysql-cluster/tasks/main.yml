@@ -4,6 +4,10 @@
     state: directory
     path: /var/data/k8s/pv-{{ ansible_hostname }}
 
+- name: "Install kubernetes python library so that latest ansible tasks can use it"
+  ansible.builtin.package:
+    name: python3-kubernetes
+
 - name: "Create storage class"
   run_once: true
   block:
@@ -82,6 +86,19 @@
           envs:
             k8sClusterDomain: cluster.local
 
+    - name: "Store AWS credentials in k8s secret"
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: v1
+          kind: Secret
+          type: Opaque
+          metadata:
+            namespace: mysql-operator
+            name: mysql-backups-s3-config
+          data:
+            credentials: "{{ lookup('ansible.builtin.file', '~/.aws/credentials') | b64encode }}"
+
     - name: "Deploy mysql cluster via helm chart"
       kubernetes.core.helm:
         name: mysql-cluster
@@ -97,6 +114,23 @@
           credentials:
             root:
               password: testpass #todo update here and below
+          backupProfiles:
+            - name: snapshot-profile-s3
+              snapshot:
+                storage:
+                  s3:
+                    prefix: mysql-backups
+                    config: mysql-backups-s3-config
+                    bucketName: heirloom-technical-exercise-bucket-38cc6
+                    profile: "{{ aws_profile }}"
+          backupSchedules:
+            - name: daily-snapshot
+              schedule: "0 3 * * *"
+              timeZone: "US/Pacific"
+              deleteBackupData: false
+              backupProfileName: snapshot-profile-s3
+              enabled: true
+
 # TODO: sleep/etc to wait for db availability
 
 - name: "Create dev_db database"
