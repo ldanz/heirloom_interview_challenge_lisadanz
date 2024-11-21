@@ -21,6 +21,7 @@
       ansible.builtin.command: kubectl apply -f {{ storage_manifest.path }}
 
 - name: "Set up volumes for each node"
+  # delegate to a host in the control plane so that kubectl will be available
   delegate_to: "{{ groups['kube_control_plane'] | first }}"
   block:
     - name: "Create manifest for volumes"
