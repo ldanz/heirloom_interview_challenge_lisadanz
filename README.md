@@ -23,7 +23,7 @@ This repository installs Kubernetes and installs a MySQL database.  It is intend
 1. Have the list of server addresses (could be IP addresses or hostnames, as long as they're reachable from the Ansible control node) stored in a file.
 1. Run the following command from the Ansible control node:
 
-        poetry run ansible-playbook -i INVENTORY_FILE site.yml
+        poetry run ansible-playbook -i INVENTORY_FILE site.yml -b
 
 ### Assumptions
 
