@@ -8,6 +8,5 @@
 - name: Install MySQL
   become: true
   hosts: all
-  gather_facts: false # likely need to remove this later?
   roles:
     - { role: "mysql-cluster", tags: ["mysql-cluster"] }

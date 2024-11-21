@@ -1,5 +1,43 @@
 ---
+- name: "Create volume parent dir"
+  ansible.builtin.file:
+    state: directory
+    path: /var/data/k8s/pv-{{ ansible_hostname }}
+
+- name: "Create storage class"
+  run_once: true
+  block:
+    - name: "Create manifest for storage class"
+      ansible.builtin.tempfile:
+        state: file
+      register: storage_manifest
+
+    - name: "Define manifest for storage class"
+      ansible.builtin.template:
+        src: storage_manifest.yml.j2
+        dest: "{{ storage_manifest.path }}"
+
+    - name: "Apply manifest for storage class"
+      ansible.builtin.command: kubectl apply -f {{ storage_manifest.path }}
+
+- name: "Set up volumes for each node"
+  delegate_to: "{{ groups['kube_control_plane'] | first }}"
+  block:
+    - name: "Create manifest for volumes"
+      ansible.builtin.tempfile:
+        state: file
+      register: volume_manifest
+
+    - name: "Define manifest for volumes"
+      ansible.builtin.template:
+        src: volume_manifest.yml.j2
+        dest: "{{ volume_manifest.path }}"
+
+    - name: "Set up volumes"
+      ansible.builtin.command: kubectl apply -f {{ volume_manifest.path }}
+
 - name: Install helm and run charts
+  run_once: true
   block:
     - name: "Install apt-transport-https"
       ansible.builtin.package:
@@ -42,4 +80,19 @@
         values:
           envs:
             k8sClusterDomain: cluster.local
-  run_once: true
+
+    - name: "Deploy mysql cluster via helm chart"
+      kubernetes.core.helm:
+        name: mysql-cluster
+        chart_ref: mysql-operator/mysql-innodbcluster
+        namespace: mysql-operator
+        create_namespace: true
+        values:
+          serverVersion: "{{ mysql_server_version }}"
+          serverInstances: 3
+          routerInstances: 2
+          tls:
+            useSelfSigned: true
+          credentials:
+            root:
+              password: testpass #todo update
