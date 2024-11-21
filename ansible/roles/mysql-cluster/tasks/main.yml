@@ -39,4 +39,7 @@
         chart_ref: mysql-operator/mysql-operator
         namespace: mysql-operator
         create_namespace: true
+        values:
+          envs:
+            k8sClusterDomain: cluster.local
   run_once: true
