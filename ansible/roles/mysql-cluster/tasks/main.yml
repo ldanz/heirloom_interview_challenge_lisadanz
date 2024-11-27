@@ -86,6 +86,10 @@
           envs:
             k8sClusterDomain: cluster.local
 
+    - name: "Pause for 1 minute to wait for pods to start up"
+      ansible.builtin.pause:
+        minutes: 1
+
     - name: "Store AWS credentials in k8s secret"
       kubernetes.core.k8s:
         state: present
@@ -133,10 +137,9 @@
               backupProfileName: snapshot-profile-s3
               enabled: true
 
-- name: "Pause for 2 minutes to wait for pods to start up"
-  ansible.builtin.pause:
-    minutes: 2
+    - name: "Pause for 2 minutes to wait for pods to start up"
+      ansible.builtin.pause:
+        minutes: 2
 
-- name: "Create dev_db database"
-  ansible.builtin.command: "kubectl -n mysql-operator exec -ti -c mysql pod/mysql-cluster-0 -- /bin/mysql -u root --password=testpass -e 'create database if not exists dev_db;'"
-  run_once: true
+    - name: "Create dev_db database"
+      ansible.builtin.command: "kubectl -n mysql-operator exec -c mysql pod/mysql-cluster-0 -- /bin/mysql -u root --password=testpass -e 'create database if not exists dev_db;'"
